@@ -7,35 +7,37 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]  
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Docker image
-      run: |
-        docker build -t ghcr.io/anishamidi/exchange:latest .
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/anishamidi/exchange:latest .
 
-    - name: Push Docker image
-      run: docker push ghcr.io/anishamidi/exchange:latest
+      - name: Push Docker image
+        run: docker push ghcr.io/anishamidi/exchange:latest
 
-    - name: Setup kubectl
-      uses: azure/setup-kubectl@v4
+      - name: Ensure kubectl is installed
+        run: |
+          if ! command -v kubectl &> /dev/null; then
+            brew install kubectl
+          fi
 
-    - name: Configure kubeconfig
-      run: |
-        mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > ~/.kube/config
+      - name: Test Minikube connection
+        run: |
+          kubectl get nodes
 
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl set image deployment/django-deployment django=ghcr.io/anishamidi/exchange:latest
-        kubectl rollout status deployment/django-deployment
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/django-deployment django=ghcr.io/anishamidi/exchange:latest
+          kubectl rollout status deployment/django-deployment
 
