@@ -16,9 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env from absolute path to avoid cwd issues
 env_path = BASE_DIR / ".env"
-if not env_path.exists():
-    raise FileNotFoundError(f".env file not found at {env_path}")
-load_dotenv(dotenv_path=env_path)
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
 
 # === General settings ===
 RUN_MODE = os.getenv("RUN_MODE", "local").lower()
