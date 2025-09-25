@@ -129,3 +129,4 @@ $ python manage.py runserver
 [django-badge]: https://img.shields.io/badge/django-4.1-informational
 [coverage-badge]: https://img.shields.io/badge/coverage-0%25-red
 [unit-tests-badge]: https://img.shields.io/badge/unit_tests-pytest-brighttgreen
+# test for ci cd
