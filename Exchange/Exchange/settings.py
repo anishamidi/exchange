@@ -36,6 +36,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # === Installed Applications ===
 INSTALLED_APPS = [
+    "django_prometheus",
     "rest_framework",
     "dashboard.apps.DashboardConfig",
     "users.apps.UsersConfig",
@@ -59,6 +60,7 @@ Q_CLUSTER = {
 }
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

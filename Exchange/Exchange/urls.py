@@ -7,4 +7,6 @@ urlpatterns = [
     path("", include('dashboard.urls')),
     path("", include('users.urls')),
     path("", include('trading.urls')),
+    path('', include('django_prometheus.urls')),
+
 ]
